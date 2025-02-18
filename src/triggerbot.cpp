@@ -3,6 +3,21 @@
 #include <iostream>
 #include <thread>
 
+void triggerClick()
+{
+	 INPUT input = { 0 };
+	 input.type = INPUT_MOUSE;
+	 input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+
+	 SendInput(1, &input, sizeof(INPUT));
+
+	 ZeroMemory(&input, sizeof(INPUT));
+	 input.type = INPUT_MOUSE;
+	 input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+
+	 SendInput(1, &input, sizeof(INPUT));
+}
+
 void triggerbot::execute()
 {
 	 uintptr_t localPlayer = memory::Read<uintptr_t>(moduleBase + offsets::dwLocalPlayerPawn);
@@ -28,8 +43,6 @@ void triggerbot::execute()
 	 if (entityHealth <= 0)
 		  return;
 	 
-	 memory::Write<int>(moduleBase + offsets::attack, 65537);
-	 std::this_thread::sleep_for(std::chrono::milliseconds(5));
-	 memory::Write<int>(moduleBase + offsets::attack, 256);
-	 std::this_thread::sleep_for(std::chrono::milliseconds(5));
+	 triggerClick();
+	 std::this_thread::sleep_for(std::chrono::milliseconds(5)); 
 }
